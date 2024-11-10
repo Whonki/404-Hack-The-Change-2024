@@ -1,3 +1,4 @@
+// NavBar.jsx
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogOut, User } from 'lucide-react';
@@ -81,9 +82,7 @@ const NavBar = () => {
     return defaultNav;
   };
 
-  const isActivePath = (path) => {
-    return location.pathname === path;
-  };
+  const isActivePath = (path) => location.pathname === path;
 
   const handleSignOut = async () => {
     try {
