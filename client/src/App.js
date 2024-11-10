@@ -2,9 +2,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
-import Cases from "./pages/Cases.jsx";
 import Profile from "./pages/Profile.jsx";
+import LegalCasesFeed from "./pages/PostsFeed.jsx";
 import NavBar from "./components/NavBar.jsx";
+import PostCase from "./pages/PostCase.jsx";
 function App() {
   return (
     <div className="App">
@@ -15,9 +16,10 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
-            <Route path="/cases" element={<Cases />} />
+            <Route path="/cases" element={<LegalCasesFeed />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/post-case" element={<PostCase />} />
           </Routes>
           </div>
         </BrowserRouter>
