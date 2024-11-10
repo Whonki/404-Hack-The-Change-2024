@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { db, auth } from "../firebase";
 import { 
   getFirestore, 
   doc, 
@@ -14,8 +15,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
   const navigate = useNavigate();
-  const auth = getAuth();
-  const db = getFirestore();
+
 
   // State management
   const [user, setUser] = useState(null);
