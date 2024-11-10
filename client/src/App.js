@@ -1,8 +1,11 @@
+
+import TestDataGenerator from "./Test_generator";
+import * as firebaseOperations from './firebase-operations';
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        React Test
+        <TestDataGenerator firebaseAdmin={firebaseOperations} />
       </header>
     </div>
   );
