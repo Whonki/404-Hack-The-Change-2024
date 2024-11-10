@@ -1,0 +1,83 @@
+/* Contact.css */
+
+/* Container and Layout Styles */
+.container {
+    max-width: 6xl;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.section {
+    margin-bottom: 3rem;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+}
+
+@media (min-width: 768px) {
+    .grid-container {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Typography Styles */
+.title {
+    font-size: 2.25rem; /* 4xl */
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+.subtitle {
+    font-size: 1.5rem; /* 2xl */
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.text-gray {
+    color: #4b5563; /* gray-600 */
+}
+
+.label {
+    display: block;
+    font-size: 0.875rem; /* small text */
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 0.25rem;
+}
+
+/* Form Styles */
+.space-y-4 > div {
+    margin-bottom: 1rem;
+}
+
+.input,
+.textarea {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+}
+
+.input:focus,
+.textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #3b82f6; /* Blue ring effect */
+}
+
+/* Button Styles */
+.button {
+    width: 100%;
+    background-color: #3b82f6; /* blue-500 */
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #2563eb; /* blue-600 */
+}
