@@ -1,20 +1,74 @@
-import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { LogOut, User } from 'lucide-react';
+import { db, auth } from "../firebase"; // Adjust the path as needed
+import { 
+  signOut, 
+  onAuthStateChanged, 
+  signInWithPopup, 
+  GoogleAuthProvider
+} from 'firebase/auth';
+
+
+const provider = new GoogleAuthProvider();
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
 
   const navigation = [
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
-    { name: 'Services', path: '/services' },
-    { name: 'Blog', path: '/blog' },
+    { name: 'Cases', path: '/cases' },
     { name: 'Contact', path: '/contact' },
+    { name: 'Profile', path: '/profile' },
   ];
 
   const isActivePath = (path) => {
     return location.pathname === path;
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      navigate('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
+  const handleSignIn = () => {
+    signInWithPopup(auth, provider)
+    .then((result) => {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+      // The signed-in user info.
+      const user = result.user;
+      // IdP data available using getAdditionalUserInfo(result)
+      // ...
+    }).catch((error) => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // The email of the user's account used.
+      const email = error.customData.email;
+      // The AuthCredential type that was used.
+      const credential = GoogleAuthProvider.credentialFromError(error);
+      // ...
+    });
   };
 
   return (
@@ -46,11 +100,29 @@ const NavBar = () => {
               {item.name}
             </Link>
           ))}
-          <button className="sign-in-button">Sign In</button>
+          
+          {!loading && (
+            user ? (
+              <div className="auth-buttons">
+                <Link to="/profile" className="profile-button">
+                  <User size={18} />
+                  <span>{user.displayName || 'Profile'}</span>
+                </Link>
+                <button onClick={handleSignOut} className="sign-out-button">
+                  <LogOut size={18} />
+                  <span>Sign Out</span>
+                </button>
+              </div>
+            ) : (
+              <button onClick={handleSignIn} className="sign-in-button">
+                Sign In
+              </button>
+            )
+          )}
         </div>
       </nav>
 
-      <style>{`
+      <style jsx>{`
         .navbar-container {
           position: sticky;
           top: 0;
@@ -126,6 +198,51 @@ const NavBar = () => {
         .nav-link.active {
           background: #2563eb;
           color: white;
+        }
+
+        .auth-buttons {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .profile-button {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 8px 12px;
+          background: #eff6ff;
+          color: #2563eb;
+          border: none;
+          border-radius: 6px;
+          font-size: 0.95rem;
+          font-weight: 500;
+          cursor: pointer;
+          text-decoration: none;
+          transition: background 0.2s ease;
+        }
+
+        .profile-button:hover {
+          background: #dbeafe;
+        }
+
+        .sign-out-button {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 8px 12px;
+          background: #fee2e2;
+          color: #dc2626;
+          border: none;
+          border-radius: 6px;
+          font-size: 0.95rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background 0.2s ease;
+        }
+
+        .sign-out-button:hover {
+          background: #fecaca;
         }
 
         .sign-in-button {
@@ -225,9 +342,18 @@ const NavBar = () => {
             text-align: center;
           }
 
+          .auth-buttons {
+            width: 100%;
+            flex-direction: column;
+            gap: 8px;
+          }
+
+          .profile-button,
+          .sign-out-button,
           .sign-in-button {
             width: 100%;
-            margin: 8px 0;
+            justify-content: center;
+            margin: 4px 0;
           }
         }
       `}</style>
