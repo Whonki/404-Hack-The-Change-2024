@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "./firebase";
+import { db } from "../firebase";
 const TestDataGenerator = ({ firebaseAdmin }) => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
