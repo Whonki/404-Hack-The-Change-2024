@@ -1,9 +1,11 @@
-import Basewebsite from "./buttonTest.jsx";
+
+import TestDataGenerator from "./Test_generator";
+import * as firebaseOperations from './firebase-operations';
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Basewebsite></Basewebsite>
+        <TestDataGenerator firebaseAdmin={firebaseOperations} />
       </header>
     </div>
   );
