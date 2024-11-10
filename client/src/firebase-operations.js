@@ -1,17 +1,22 @@
 // firebaseOperations.js
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp,updateDoc, doc } from "firebase/firestore";
 import { db } from "./firebase";
 
 // Client-side version of createLawyer
 const createLawyer = async (lawyerData) => {
   try {
     const docRef = await addDoc(collection(db, "Lawyers"), {
-      ...lawyerData,
-      Ratings: lawyerData.Ratings,
+      Name: lawyerData.Name,
+      Email: lawyerData.Email,
+      Password: lawyerData.Password,
+      Phone: lawyerData.Phone,
+      ProfilePic: lawyerData.ProfilePic,
       Tags: lawyerData.Tags || [],
       Specializations: lawyerData.Specializations || [],
+      Languages: lawyerData.Languages || [],
       Credentials: lawyerData.Credentials || [],
       Affiliations: lawyerData.Affiliations || [],
+      Ratings: lawyerData.Ratings,
       CreatedAt: serverTimestamp(),
       LastLogin: serverTimestamp(),
     });
@@ -26,10 +31,15 @@ const createLawyer = async (lawyerData) => {
 const createClient = async (clientData) => {
   try {
     const docRef = await addDoc(collection(db, "Clients"), {
-      ...clientData,
+      Name: clientData.Name,
+      Email: clientData.Email,
+      Password: clientData.Password,
+      ProfilePic: clientData.ProfilePic,
+      Phone: clientData.Phone,
+      Tags: clientData.Tags || [],
+      Languages: clientData.Languages || [],
       CreatedAt: serverTimestamp(),
       LastLogin: serverTimestamp(),
-      Tags: clientData.Tags || [],
     });
     return docRef.id;
   } catch (error) {
@@ -42,11 +52,14 @@ const createClient = async (clientData) => {
 const createPost = async (post) => {
   try {
     const docRef = await addDoc(collection(db, "Posts"), {
-      ...post,
-      CreatedAt: serverTimestamp(),
+      Title: post.Title,
+      Content: post.Content,
+      UserId: post.UserId,
+      Languages: post.Languages || [],
       Status: post.Status || "active",
       Visibility: post.Visibility || "public",
       Tags: post.Tags || [],
+      CreatedAt: serverTimestamp(),
     });
     return docRef.id;
   } catch (error) {
@@ -54,6 +67,18 @@ const createPost = async (post) => {
     throw error;
   }
 };
+
+const updatePost = async (docId, updates) => {
+    try {
+      const postRef = doc(db, "Posts", docId);
+      await updateDoc(postRef, updates);
+      console.log(`Document with ID ${docId} successfully updated.`);
+    } catch (error) {
+      console.error("Error updating document:", error);
+      throw error;
+    }
+  };
+  
 
 // Client-side version of createChatroom
 const createChatroom = async (participants) => {
@@ -89,4 +114,4 @@ const sendMessage = async (chatroomId, userId, content) => {
   }
 };
 
-export { createLawyer, createClient, createPost, createChatroom, sendMessage };
+export { createLawyer, createClient, createPost, updatePost, createChatroom, sendMessage };

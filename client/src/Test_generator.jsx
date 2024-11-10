@@ -1,22 +1,144 @@
 import React, { useState } from "react";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "./firebase";
-
 const TestDataGenerator = ({ firebaseAdmin }) => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
 
-  const generateLawyerData = () => ({
-    Name: `Lawyer ${Math.floor(Math.random() * 1000)}`,
-    Email: `lawyer${Math.floor(Math.random() * 1000)}@test.com`,
-    Phone: `+1${Math.floor(Math.random() * 9000000000 + 1000000000)}`,
+  const names = [
+    "Liam",
+    "Emma",
+    "Noah",
+    "Olivia",
+    "Ava",
+    "Sophia",
+    "William",
+    "James",
+    "Isabella",
+    "Benjamin",
+    "Charlotte",
+    "Lucas",
+    "Amelia",
+    "Henry",
+    "Evelyn",
+    "Alexander",
+    "Mia",
+    "Elijah",
+    "Harper",
+    "Sebastian",
+    "Ella",
+    "Jackson",
+    "Scarlett",
+    "Mason",
+    "Aria",
+    "Logan",
+    "Luna",
+    "Ethan",
+    "Chloe",
+    "Michael",
+    "Mila",
+    "Daniel",
+    "Layla",
+    "Matthew",
+    "Lily",
+    "Aiden",
+    "Avery",
+    "Joseph",
+    "Grace",
+    "Samuel",
+    "Ellie",
+    "David",
+    "Zoey",
+    "Carter",
+    "Nora",
+    "Owen",
+    "Hazel",
+    "Wyatt",
+    "Riley",
+    "John",
+  ];
+
+  const phoneNumbers = [
+    "(201) 555-0123",
+    "(202) 555-0198",
+    "(203) 555-0176",
+    "(204) 555-0134",
+    "(205) 555-0192",
+    "(206) 555-0155",
+    "(207) 555-0179",
+    "(208) 555-0147",
+    "(209) 555-0163",
+    "(210) 555-0185",
+    "(212) 555-0151",
+    "(213) 555-0189",
+    "(214) 555-0138",
+    "(215) 555-0129",
+    "(216) 555-0193",
+    "(217) 555-0170",
+    "(218) 555-0183",
+    "(219) 555-0159",
+    "(220) 555-0164",
+    "(221) 555-0188",
+    "(222) 555-0145",
+    "(223) 555-0197",
+    "(224) 555-0136",
+    "(225) 555-0161",
+    "(226) 555-0181",
+    "(227) 555-0127",
+    "(228) 555-0153",
+    "(229) 555-0173",
+    "(230) 555-0167",
+    "(231) 555-0141",
+    "(232) 555-0194",
+    "(233) 555-0171",
+    "(234) 555-0152",
+    "(235) 555-0139",
+    "(236) 555-0184",
+    "(237) 555-0162",
+    "(238) 555-0146",
+    "(239) 555-0157",
+    "(240) 555-0177",
+    "(241) 555-0195",
+    "(242) 555-0131",
+    "(243) 555-0187",
+    "(244) 555-0148",
+    "(245) 555-0168",
+    "(246) 555-0124",
+    "(247) 555-0190",
+    "(248) 555-0175",
+    "(249) 555-0132",
+    "(250) 555-0154",
+    "(251) 555-0186",
+  ];
+
+  const random_profilepic_url = "https://i.pravatar.cc/300";
+
+  const generateLawyerData = (
+    random_name = names[Math.floor(Math.random() * names.length)],
+    random_phonenum = phoneNumbers[
+      Math.floor(Math.random() * phoneNumbers.length)
+    ]
+  ) => ({
+    Name: random_name,
+    Email: random_name,
     Password: `Pass${Math.floor(Math.random() * 1000)}`,
+    Phone: random_phonenum,
+    ProfilePic: random_profilepic_url,
     Tags: ["experienced", "professional", "responsive"],
     Specializations: [
       "Corporate Law",
       "Family Law",
       "Criminal Law",
       "Civil Law",
+    ].slice(0, Math.floor(Math.random() * 3) + 1),
+    Languages: [
+        "English",
+        "French",
+        "Tagalog",
+        "Spanish",
+        "Japanese",
+        "Korean",
+        "Italian"
     ].slice(0, Math.floor(Math.random() * 3) + 1),
     Credentials: [
       {
@@ -34,12 +156,27 @@ const TestDataGenerator = ({ firebaseAdmin }) => {
     Ratings: [Math.random() * 10, Math.random() * 10],
   });
 
-  const generateClientData = () => ({
-    Name: `Client ${Math.floor(Math.random() * 1000)}`,
-    Email: `client${Math.floor(Math.random() * 1000)}@test.com`,
+  const generateClientData = (
+    random_name = names[Math.floor(Math.random() * names.length)],
+    random_phonenum = phoneNumbers[
+      Math.floor(Math.random() * phoneNumbers.length)
+    ]
+  ) => ({
+    Name: random_name,
+    Email: random_name,
     Password: `Pass${Math.floor(Math.random() * 1000)}`,
-    Phone: `+1${Math.floor(Math.random() * 9000000000 + 1000000000)}`,
+    ProfilePic: "https://i.pravatar.cc/300",
+    Phone: random_phonenum,
     Tags: ["active", "verified"],
+    Languages: [
+      "English",
+      "French",
+      "Tagalog",
+      "Spanish",
+      "Japanese",
+      "Korean",
+      "Italian"
+  ].slice(0, Math.floor(Math.random() * 3) + 1),
   });
 
   const generatePostData = (randomClientId) => ({
@@ -50,12 +187,13 @@ const TestDataGenerator = ({ firebaseAdmin }) => {
       ]
     } law.`,
     UserId: randomClientId,
+    Languages: postMessage.Languages,
     Status: ["active", "resolved", "pending"][Math.floor(Math.random() * 3)],
     Visibility: "public",
     Tags: ["urgent", "consultation", "advice"].slice(
       0,
       Math.floor(Math.random() * 3) + 1
-    ),
+    )
   });
 
   const generateTestData = async () => {
