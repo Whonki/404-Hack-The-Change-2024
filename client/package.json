@@ -232,7 +232,7 @@
     "yocto-queue": "^0.1.0"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "7.21.11"
+    "@babel/plugin-proposal-private-property-in-object":"7.21.11"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -241,17 +241,5 @@
     "eject": "react-scripts eject"
   },
   "author": "",
-  "license": "ISC",
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+  "license": "ISC"
 }
