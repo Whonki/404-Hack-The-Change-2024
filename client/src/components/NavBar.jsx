@@ -56,8 +56,8 @@ const NavBar = () => {
       { name: 'Home', path: '/' },
       { name: 'About', path: '/about' },
       { name: 'Contact', path: '/contact' },
+      { name: 'Chats', path: '/chats' },
     ];
-
     if (!user) {
       return defaultNav;
     }
@@ -157,7 +157,7 @@ const NavBar = () => {
           <div className="navbar-brand">
             <Link to="/" className="logo">
               <div className="logo-circle">L</div>
-              <span className="brand-name">Logo</span>
+              <span className="brand-name">LegalEase</span>
             </Link>
 
             <button 

@@ -1,74 +1,135 @@
-import React, { useState, useEffect } from 'react';
-import { MessageCircle } from 'lucide-react';
-import { collection, query, orderBy, limit, startAfter, getDocs } from 'firebase/firestore';
-import { db } from '../firebase'; // Ensure you have this firebase config file
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { MessageCircle, Users } from "lucide-react";
+import {
+  collection,
+  query,
+  orderBy,
+  limit,
+  startAfter,
+  getDocs,
+  where,
+  addDoc,
+} from "firebase/firestore";
+import { db } from "../firebase";
+import styles from "./PostsCard.module.css";
 
-const PostCard = ({ post, expanded, onClick }) => {
-  return (
-    <article 
-      onClick={onClick}
-      className={`w-full max-w-2xl mx-auto my-5 rounded-xl bg-white shadow-lg overflow-hidden 
-        transform transition-transform duration-300 cursor-pointer hover:shadow-xl hover:scale-105
-        ${expanded ? 'scale-105' : 'scale-100'}`}
-    >
-      <header className="p-6 border-b border-gray-200 bg-gradient-to-r from-green-50 to-blue-50">
-        <div className="flex justify-between items-start mb-3">
-          <div className="flex-1">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-2">{post.Title}</h2>
-            <p className="text-xs text-gray-500">
-              {new Date(post.CreatedAt?.seconds * 1000).toLocaleDateString()}
-            </p>
+const PostsFeed = ({ currentUserId }) => {
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  const handleCreateOrSelectRoom = async (targetUserId) => {
+    try {
+      if (!currentUserId || !targetUserId) {
+        console.error("User IDs are missing:", { currentUserId, targetUserId });
+        return;
+      }
+
+      const roomsQuery = query(
+        collection(db, "Chatrooms"),
+        where("Users", "array-contains", currentUserId)
+      );
+
+      const snapshot = await getDocs(roomsQuery);
+      let roomExists = false;
+      let roomId = null;
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.Users.includes(targetUserId) && data.Users.length === 2) {
+          roomExists = true;
+          roomId = doc.id;
+        }
+      });
+
+      if (!roomExists) {
+        const newRoomRef = await addDoc(collection(db, "Chatrooms"), {
+          Users: [currentUserId, targetUserId],
+          createdAt: new Date(),
+        });
+        roomId = newRoomRef.id;
+      }
+
+      console.log(`Room created or selected with ID: ${roomId}`);
+
+      // Navigate to chat page with roomId
+      navigate(`/chat/${roomId}`);
+    } catch (error) {
+      console.error("Error creating or selecting room:", error.message, error.code, error);
+    }
+  };
+
+  const PostCard = ({ post, expanded, onClick, handleCreateOrSelectRoom }) => {
+    return (
+      <article
+        onClick={onClick}
+        className={`${styles.postCard} ${expanded ? styles.expanded : ""}`}
+      >
+        <header className={styles.header}>
+          <div className="flex justify-between items-start mb-3">
+            <div className="flex-1">
+              <h2 className={styles.headerTitle}>{post.Title}</h2>
+              <p className={styles.headerDate}>
+                {new Date(post.CreatedAt?.seconds * 1000).toLocaleDateString()}
+              </p>
+            </div>
           </div>
-        </div>
-        
-        <div className="flex flex-wrap gap-2 mt-3">
-          {post.Tags?.map((tag, index) => (
-            <span key={index} className="px-3 py-1 rounded-full bg-gray-200 text-xs text-gray-700">
-              {tag}
+
+          <div className={styles.tags}>
+            {post.Tags?.map((tag, index) => (
+              <span key={index} className={styles.tag}>
+                {tag}
+              </span>
+            ))}
+            {post.Languages?.map((language, index) => (
+              <span key={`lang-${index}`} className={styles.language}>
+                {language}
+              </span>
+            ))}
+            <span
+              className={`${styles.status} ${
+                post.Status === "published"
+                  ? styles.statusPublished
+                  : styles.statusDraft
+              }`}
+            >
+              {post.Status}
             </span>
-          ))}
-          {post.Languages?.map((language, index) => (
-            <span key={`lang-${index}`} className="px-3 py-1 rounded-full bg-blue-200 text-xs text-blue-700">
-              {language}
+            <span
+              className={`${styles.visibility} ${
+                post.Visibility === "public"
+                  ? styles.visibilityPublic
+                  : styles.visibilityPrivate
+              }`}
+            >
+              {post.Visibility}
             </span>
-          ))}
-          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-            post.Status === 'published' ? 'bg-green-200 text-green-700' : 'bg-yellow-200 text-yellow-700'
-          }`}>
-            {post.Status}
-          </span>
-          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-            post.Visibility === 'public' ? 'bg-gray-200 text-gray-700' : 'bg-purple-200 text-purple-700'
-          }`}>
-            {post.Visibility}
-          </span>
+          </div>
+        </header>
+
+        <div
+          className={`${styles.content} ${expanded ? "block" : "line-clamp-3"}`}
+        >
+          <p>{post.Content}</p>
         </div>
-      </header>
 
-      <div className={`p-6 text-gray-700 leading-relaxed ${expanded ? 'block' : 'line-clamp-3'}`}>
-        <p>{post.Content}</p>
-      </div>
+        {expanded && (
+          <footer className={styles.footer}>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleCreateOrSelectRoom(post.id);
+              }}
+              className={styles.messageButton}
+            >
+              <MessageCircle className="w-5 h-5" />
+              Message
+            </button>
+          </footer>
+        )}
+      </article>
+    );
+  };
 
-      {expanded && (
-        <footer className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end">
-          <button 
-            onClick={(e) => {
-              e.stopPropagation();
-              // Handle messaging logic here
-              console.log('Message user:', post.UserId);
-            }}
-            className="flex items-center gap-2 px-4 py-2 rounded-md bg-green-500 text-white font-medium hover:bg-green-600 transition-all duration-200"
-          >
-            <MessageCircle className="w-5 h-5" />
-            Message
-          </button>
-        </footer>
-      )}
-    </article>
-  );
-};
-
-const PostsFeed = () => {
   const [posts, setPosts] = useState([]);
   const [lastDoc, setLastDoc] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -78,57 +139,48 @@ const PostsFeed = () => {
   const POSTS_PER_PAGE = 10;
 
   const fetchPosts = async (isInitial = false) => {
-    try {
-      setLoading(true);
-      
-      let postsQuery = query(
-        collection(db, 'Posts'),
-        orderBy('CreatedAt', 'desc'),
+    setLoading(true);
+    let postsQuery = query(
+      collection(db, "Posts"),
+      orderBy("CreatedAt", "desc"),
+      limit(POSTS_PER_PAGE)
+    );
+
+    if (!isInitial && lastDoc) {
+      postsQuery = query(
+        collection(db, "Posts"),
+        orderBy("CreatedAt", "desc"),
+        startAfter(lastDoc),
         limit(POSTS_PER_PAGE)
       );
-
-      if (!isInitial && lastDoc) {
-        postsQuery = query(
-          collection(db, 'Posts'),
-          orderBy('CreatedAt', 'desc'),
-          startAfter(lastDoc),
-          limit(POSTS_PER_PAGE)
-        );
-      }
-
-      const snapshot = await getDocs(postsQuery);
-      
-      if (snapshot.empty) {
-        setHasMore(false);
-        setLoading(false);
-        return;
-      }
-
-      const newPosts = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-
-      setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
-      setPosts(isInitial ? newPosts : [...posts, ...newPosts]);
-      
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-    } finally {
-      setLoading(false);
     }
+
+    const snapshot = await getDocs(postsQuery);
+    if (snapshot.empty) {
+      setHasMore(false);
+      setLoading(false);
+      return;
+    }
+
+    const newPosts = snapshot.docs.map((doc) => ({
+      id: doc.ref.id,
+      ...doc.data(),
+    }));
+
+    setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
+    setPosts(isInitial ? newPosts : [...posts, ...newPosts]);
+    setLoading(false);
   };
 
   useEffect(() => {
     fetchPosts(true);
   }, []);
 
-  // Intersection Observer for infinite scroll
-  const observerTarget = React.useRef(null);
+  const observerTarget = useRef(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      entries => {
+      (entries) => {
         if (entries[0].isIntersecting && hasMore && !loading) {
           fetchPosts();
         }
@@ -148,33 +200,26 @@ const PostsFeed = () => {
   }, [hasMore, loading, lastDoc]);
 
   return (
-    <div className="container mx-auto px-4 py-12 bg-gray-50">
-      {posts.map(post => (
-        <PostCard 
+    <div>
+      {posts.map((post) => (
+        <PostCard
           key={post.id}
           post={post}
           expanded={expandedPostId === post.id}
-          onClick={() => setExpandedPostId(expandedPostId === post.id ? null : post.id)}
+          onClick={() =>
+            setExpandedPostId(expandedPostId === post.id ? null : post.id)
+          }
+          handleCreateOrSelectRoom={handleCreateOrSelectRoom}
         />
       ))}
-      
-      {loading && (
-        <div className="w-full flex justify-center p-4">
-          <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
-        </div>
-      )}
-      
-      {!loading && hasMore && (
-        <div ref={observerTarget} className="w-full h-10 bg-gray-50" />
-      )}
-      
-      {!hasMore && posts.length > 0 && (
-        <p className="text-center text-gray-500 my-4 italic">No more posts to load</p>
-      )}
-      
-      {!loading && posts.length === 0 && (
-        <p className="text-center text-gray-500 my-4 italic">No posts found</p>
-      )}
+
+      {loading && <p>Loading...</p>}
+
+      {!loading && hasMore && <div ref={observerTarget} />}
+
+      {!hasMore && posts.length > 0 && <p>No more posts to load</p>}
+
+      {!loading && posts.length === 0 && <p>No posts found</p>}
     </div>
   );
 };

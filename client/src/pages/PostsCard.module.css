@@ -1,0 +1,113 @@
+/* PostCard.module.css */
+
+.postCard {
+    width: 100%;
+    max-width: 40rem;
+    margin: 1.25rem auto;
+    border-radius: 0.75rem;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+  }
+  
+  .postCard:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    background: linear-gradient(to right, #ebf8ff, #f0fff4);
+  }
+  
+  .headerTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1a202c;
+    margin-bottom: 0.5rem;
+  }
+  
+  .headerDate {
+    font-size: 0.75rem;
+    color: #718096;
+  }
+  
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+  
+  .tag, .language, .status, .visibility {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+  }
+  
+  .tag {
+    background-color: #edf2f7;
+    color: #4a5568;
+  }
+  
+  .language {
+    background-color: #bee3f8;
+    color: #2b6cb0;
+  }
+  
+  .status {
+    font-weight: 600;
+  }
+  
+  .statusPublished {
+    background-color: #c6f6d5;
+    color: #2f855a;
+  }
+  
+  .statusDraft {
+    background-color: #faf089;
+    color: #d69e2e;
+  }
+  
+  .visibilityPublic {
+    background-color: #edf2f7;
+    color: #4a5568;
+  }
+  
+  .visibilityPrivate {
+    background-color: #e9d8fd;
+    color: #6b46c1;
+  }
+  
+  .content {
+    padding: 1.5rem;
+    color: #4a5568;
+  }
+  
+  .footer {
+    padding: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+    background-color: #f7fafc;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .messageButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background-color: #48bb78;
+    color: white;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+  
+  .messageButton:hover {
+    background-color: #38a169;
+  }
+  
