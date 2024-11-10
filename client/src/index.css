@@ -1,0 +1,26 @@
+/* Button-related tests.*/
+.my-button {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+    background-color:pink;
+    border-radius:0px;
+    transition-duration:10ms;
+}
+.my-button:hover {
+    background-color:brown;
+    transition-duration:10ms;
+}
+/*Notif. related tests.*/
+.Notification-Button {
+  background-color: #ff5733;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.toast {
+  background-color: #333;
+  color: white;
+  border-radius: 8px;
+}
