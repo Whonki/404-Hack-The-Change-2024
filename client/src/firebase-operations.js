@@ -1,5 +1,5 @@
 // firebaseOperations.js
-import { collection, addDoc, serverTimestamp,updateDoc, doc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp,updateDoc, doc, deleteDoc } from "firebase/firestore";
 import { db } from "./firebase";
 
 // Client-side version of createLawyer
@@ -27,6 +27,28 @@ const createLawyer = async (lawyerData) => {
   }
 };
 
+const updateLawyer = async (docId, updates) => {
+  try {
+    const postRef = doc(db, "Lawyer", docId);
+    await updateDoc(postRef, updates);
+    console.log(`Lawyer with ID ${docId} successfully updated.`);
+  } catch (error) {
+    console.error("Error updating document:", error);
+    throw error;
+  }
+};
+
+const deleteLawyer = async (docId) => {
+  try {
+    const postRef = doc(db, "Lawyers", docId);
+    await deleteDoc(postRef);
+    console.log(`Lawyer with ID ${docId} successfully removed.`);
+  } catch (error) {
+    console.error("Error updating document:", error);
+    throw error;
+  }
+};
+
 // Client-side version of createClient
 const createClient = async (clientData) => {
   try {
@@ -44,6 +66,28 @@ const createClient = async (clientData) => {
     return docRef.id;
   } catch (error) {
     console.error("Error creating client:", error);
+    throw error;
+  }
+};
+
+const updateClient = async (docId, updates) => {
+  try {
+    const postRef = doc(db, "Clients", docId);
+    await updateDoc(postRef, updates);
+    console.log(`Client with ID ${docId} successfully updated.`);
+  } catch (error) {
+    console.error("Error updating document:", error);
+    throw error;
+  }
+};
+
+const deleteClient = async (docId) => {
+  try {
+    const postRef = doc(db, "Clients", docId);
+    await deleteDoc(postRef);
+    console.log(`Client with ID ${docId} successfully removed.`);
+  } catch (error) {
+    console.error("Error updating document:", error);
     throw error;
   }
 };
@@ -79,6 +123,16 @@ const updatePost = async (docId, updates) => {
     }
   };
   
+  const deletePost = async (docId) => {
+    try {
+      const postRef = doc(db, "Posts", docId);
+      await deleteDoc(postRef);
+      console.log(`Document with ID ${docId} successfully removed.`);
+    } catch (error) {
+      console.error("Error updating document:", error);
+      throw error;
+    }
+  };
 
 // Client-side version of createChatroom
 const createChatroom = async (participants) => {
@@ -114,4 +168,51 @@ const sendMessage = async (chatroomId, userId, content) => {
   }
 };
 
-export { createLawyer, createClient, createPost, updatePost, createChatroom, sendMessage };
+const updateMessage = async (chatroomId, userId, content) => {
+  try {
+    const docRef = await updateDoc(
+      collection(db, "Chatrooms", chatroomId, "Messages"),
+      {
+        UserId: userId,
+        Content: content,
+        CreatedAt: serverTimestamp(),
+      }
+    );
+    return docRef.id;
+  } catch (error) {
+    console.error("Error sending message:", error);
+    throw error;
+  }
+};
+
+
+// Client-side version of sendMessage
+const deleteMessage = async (chatroomId, userId, docId) => {
+  try {
+    const posRef = doc("Chatrooms", chatroomId, "Messages", userId, docId)
+    await deleteDoc(posRef);
+    return docRef.id;
+  } catch (error) {
+    console.error("Error sending message:", error);
+    throw error;
+  }
+};
+
+export { 
+  createLawyer, 
+  updateLawyer, 
+  deleteLawyer,
+
+  createClient, 
+  updateClient,
+  deleteClient,
+
+  createPost, 
+  updatePost, 
+  deletePost,
+
+  createChatroom, 
+
+  sendMessage,
+  updateMessage,
+  deleteMessage };
