@@ -1,34 +1,36 @@
-// Home Page
-const Home = () => (
-    <div className="max-w-6xl mx-auto p-8">
-      <section className="mb-12">
-        <h1 className="text-4xl font-bold mb-6">Welcome to Our Website</h1>
-        <p className="text-xl text-gray-600 mb-8">
-          Discover amazing products and services that will transform your experience.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Feature Cards */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold mb-2">Feature One</h3>
-            <p className="text-gray-600">
-              Explore our innovative solutions designed for you.
-            </p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold mb-2">Feature Two</h3>
-            <p className="text-gray-600">
-              Experience world-class service and support.
-            </p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold mb-2">Feature Three</h3>
-            <p className="text-gray-600">
-              Join thousands of satisfied customers.
-            </p>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
+// Home.jsx
+import './Home.css';
 
-  export default Home;
+const Home = () => (
+  <div className="box">
+    <section className="section">
+      <h1 className="title">Welcome to LegalEase!</h1>
+      <p className="subtitle">
+        The best site for all of your legal needs!
+      </p>
+      <div className="grid-container">
+        {/* Feature Cards */}
+        <div className="card">
+          <h3 className="feature-title">Why us?</h3>
+          <p className="text-gray">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+        </div>
+        <div className="card">
+          <h3 className="feature-title">Find Lawyers Near You!</h3>
+          <p className="text-gray">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+        </div>
+        <div className="card">
+          <h3 className="feature-title">Connect with Lawyers that match with your legal inquiries!</h3>
+          <p className="text-gray">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+);
+
+export default Home;
