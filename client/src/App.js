@@ -4,8 +4,10 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Profile from "./pages/Profile.jsx";
 import LegalCasesFeed from "./pages/PostsFeed.jsx";
+import ChatInterface from "./pages/ChatInterface.jsx";
 import NavBar from "./components/NavBar.jsx";
 import PostCase from "./pages/PostCase.jsx";
+import { auth } from "./firebase.js"
 function App() {
   return (
     <div className="App">
@@ -16,7 +18,9 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
-            <Route path="/cases" element={<LegalCasesFeed />} />
+            <Route path="/cases" element={<LegalCasesFeed currentUserId={auth.currentUser.uid} />} />
+            <Route path="/chats" element={<ChatInterface />} />
+            <Route path="/chat/:roomId" element={<ChatInterface />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/post-case" element={<PostCase />} />
